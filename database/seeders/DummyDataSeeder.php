@@ -38,6 +38,8 @@ class DummyDataSeeder extends Seeder
 
         // --- Daftar Anggota dari Manhwa ---
         $anggotaList = [
+
+            ['nama' => 'Anggota', 'email' => 'anggota@email.com'],
             // Infinite Mage (6)
             ['nama' => 'Shirone Arian', 'email' => 'shirone.arian@email.com'],
             ['nama' => 'Amy Karmis', 'email' => 'amy.karmis@email.com'],
