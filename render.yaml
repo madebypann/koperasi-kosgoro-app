@@ -1,13 +1,14 @@
-# render.yaml
+# render.yaml (Versi yang sudah diperbaiki)
 
 services:
-  # Web Service untuk aplikasi Laravel Anda
+  # 1. Konfigurasi Web Service (Aplikasi Laravel)
   - type: web
     name: koperasi-kosgoro-app
     env: php
     region: singapore
     plan: free
     branch: main
+    
     buildCommand: |
       composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
       npm install
@@ -16,17 +17,18 @@ services:
       php artisan route:cache
       php artisan view:cache
       php artisan migrate --force
+      
     startCommand: php artisan serve --host 0.0.0.0 --port $PORT
 
-  # Database untuk aplikasi Anda (sudah diubah ke MySQL)
-  - type: mysql # <-- UBAH INI (dari psql ke mysql)
-    name: kosgoro-db-mysql # Anda bisa menamainya apa saja
+  # 2. Konfigurasi Database (Tipe sudah diperbaiki)
+  - type: p_mysql # <-- PERBAIKAN: dari 'mysql' menjadi 'p_mysql'
+    name: kosgoro-db 
     region: singapore
     plan: free
-    databaseName: koperasi_kosgoro # <-- UBAH INI (sesuai nama database Anda)
-    mysqlVersion: 8 # <-- UBAH INI (Render mendukung versi 8)
+    databaseName: koperasi_kosgoro
+    mysqlVersion: 8
 
-# Konfigurasi Environment Variables
+# 3. Konfigurasi Environment Variables (Referensi sudah diperbaiki)
 envVarGroups:
   - name: laravel-env
     envVars:
@@ -37,38 +39,37 @@ envVarGroups:
           property: url
       - key: APP_KEY
         generateValue: true
+      
+      # Referensi koneksi database (sudah diperbaiki)
+      - key: DB_HOST
+        fromService:
+          type: p_mysql # <-- PERBAIKAN
+          name: kosgoro-db
+          property: host
+      - key: DB_DATABASE
+        fromService:
+          type: p_mysql # <-- PERBAIKAN
+          name: kosgoro-db
+          property: database
+      - key: DB_USERNAME
+        fromService:
+          type: p_mysql # <-- PERBAIKAN
+          name: kosgoro-db
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          type: p_mysql # <-- PERBAIKAN
+          name: kosgoro-db
+          property: password
+      
+      # Kunci-kunci statis
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
       - key: LOG_CHANNEL
         value: stderr
-      
-      # Koneksi ke database MySQL
       - key: DB_CONNECTION
-        value: mysql # <-- UBAH INI
-      - key: DB_HOST
-        fromService:
-          type: mysql # <-- UBAH INI
-          name: kosgoro-db-mysql # Sesuaikan dengan nama service database di atas
-          property: host
+        value: mysql
       - key: DB_PORT
-        fromService:
-          type: mysql # <-- UBAH INI
-          name: kosgoro-db-mysql
-          property: port
-      - key: DB_DATABASE
-        fromService:
-          type: mysql # <-- UBAH INI
-          name: kosgoro-db-mysql
-          property: database
-      - key: DB_USERNAME
-        fromService:
-          type: mysql # <-- UBAH INI
-          name: kosgoro-db-mysql
-          property: user
-      - key: DB_PASSWORD
-        fromService:
-          type: mysql # <-- UBAH INI
-          name: kosgoro-db-mysql
-          property: password
+        value: 3306
